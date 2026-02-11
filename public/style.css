@@ -1,0 +1,258 @@
+/* ===========================
+   Algemene body styling
+   =========================== */
+body {
+  font-family: Arial, sans-serif;
+  margin: 0;
+  padding: 1rem;
+  background-color: #f9f9f9;
+}
+
+/* ===========================
+   Container
+   =========================== */
+.container {
+  max-width: 1600px;
+  margin: 0 auto;
+}
+
+/* ===========================
+   Header
+   =========================== */
+header {
+  text-align: center;
+  margin-bottom: 2rem;
+}
+
+header h1 {
+  font-size: 2rem;
+  color: #333;
+}
+
+/* ===========================
+   Filters
+   =========================== */
+
+/*  Flexbox */
+.filters form {
+  display: flex;
+  gap: 1rem;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 2rem;
+}
+
+.filters form label {
+  font-weight: bold;
+}
+
+.filters form select {
+  padding: 0.5rem;
+  border-radius: 5px; /*  Border-radius */
+  border: 1px solid #ccc;
+}
+
+.filters form button {
+  padding: 0.5rem 1rem;
+  border-radius: 5px; /*  Border-radius */
+  border: none;
+  background-color: #333;
+  color: #fff;
+  cursor: pointer;
+
+  /*  Transition */
+  transition: background-color 0.3s ease;
+}
+
+/*  Hover effect */
+.filters form button:hover {
+  background-color: #555;
+}
+
+/* ===========================
+   Cards Grid
+   =========================== */
+
+/*  Grid */
+#cardsGrid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(220px, 1fr));
+  gap: 1.5rem;
+  align-items: stretch;
+
+  max-width: 1600px;
+  margin: 0 auto;
+
+  /*  Container Queries activeren */
+  container-type: inline-size;
+}
+
+/* ===========================
+   Individuele Card
+   =========================== */
+
+#cardsGrid .card {
+  background-color: #fff;
+  padding: 1rem;
+
+  /*  Border-radius */
+  border-radius: 10px;
+
+  /*  Box-shadow */
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+
+  text-align: center;
+
+  /*  Flexbox (voor interne layout) */
+  display: flex;
+  flex-direction: column;
+
+  /*  Transition */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+/*  Hover effect */
+#cardsGrid .card:hover {
+  transform: translateY(-6px);
+
+  /*  Box-shadow (sterker bij hover) */
+  box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+}
+
+/* ===========================
+   Afbeelding
+   =========================== */
+
+#cardsGrid .card img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+
+  /*  Border-radius */
+  border-radius: 8px;
+
+  margin-bottom: 0.5rem;
+}
+
+/* ===========================
+   Tekst styling
+   =========================== */
+
+#cardsGrid .card h2 {
+  margin: 0.5rem 0 0.3rem 0;
+  font-size: 1.2rem;
+  color: #222;
+}
+
+#cardsGrid .card p {
+  margin: 0.2rem 0;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* ===========================
+   Overlay voor fav_animal
+   =========================== */
+
+.image-container {
+  position: relative;
+}
+
+.animal-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  background: rgba(0,0,0,0.7);
+  color: #fff;
+  padding: 5px;
+  font-weight: bold;
+  text-align: center;
+
+  opacity: 0;
+
+  /*  Transition */
+  transition: opacity 0.3s ease;
+
+  border-bottom-left-radius: 8px;  /*  Border-radius */
+  border-bottom-right-radius: 8px; /*  Border-radius */
+}
+
+/*  Hover effect */
+.image-container:hover .animal-overlay {
+  opacity: 1;
+}
+
+/* ===========================
+   Media Queries
+   =========================== */
+
+/*  Media Query – grote laptops */
+@media (max-width: 1200px) {
+  #cardsGrid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+/*  Media Query – tablets */
+@media (max-width: 768px) {
+  .filters form {
+    flex-direction: column; /*  Flexbox responsive */
+    align-items: center;
+  }
+
+  #cardsGrid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/*  Media Query – mobiel */
+@media (max-width: 480px) {
+  header h1 {
+    font-size: 1.5rem;
+  }
+
+  #cardsGrid {
+    grid-template-columns: 1fr;
+  }
+
+  #cardsGrid .card h2 {
+    font-size: 1rem;
+  }
+
+  #cardsGrid .card p {
+    font-size: 0.8rem;
+  }
+}
+
+/* ===========================
+   Container Queries
+   =========================== */
+
+/*  Container Query */
+@container (max-width: 1000px) {
+  .card {
+    padding: 0.8rem;
+  }
+
+  .card h2 {
+    font-size: 1rem;
+  }
+}
+
+@container (max-width: 700px) {
+  .card img {
+    height: 150px;
+  }
+
+  .card p {
+    font-size: 0.8rem;
+  }
+}
+
+@container (max-width: 400px) {
+  .card img {
+    height: 120px;
+  }
+}
