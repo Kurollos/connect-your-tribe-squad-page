@@ -100,6 +100,40 @@ app.get('/student/:id', async function (request, response) {
   // Geef ook de eerder opgehaalde squad data mee aan de view
   response.render('student.liquid', {person: personDetailResponseJSON.data, squads: squadResponseJSON.data})
 })
+app.get('/', async (req, res) => {
+  const sort = req.query.sort || 'name-asc'; // sorteren
+  const animal = req.query.animal || '';     // filter op dier
+
+  // Bepaal hoe je wilt sorteren
+  let sortParam;
+  switch(sort) {
+    case 'name-asc': sortParam = 'name'; break;
+    case 'name-desc': sortParam = '-name'; break;
+    case 'birthdate-asc': sortParam = 'birthdate'; break;
+    case 'birthdate-desc': sortParam = '-birthdate'; break;
+    default: sortParam = 'name';
+  }
+
+  // Bouw de params voor Directus API
+  const params = {
+    fields: '*,squads.*',
+    sort: sortParam,
+    'filter[squads][squad_id][tribe][name]': 'FDND Jaar 1',
+    'filter[squads][squad_id][cohort]': '2526',
+  };
+
+  // Als een dier gekozen is, voeg filter toe
+  if (animal) {
+    params['filter[fav_animal][_eq]'] = animal; // Directus filter voor exact gelijk
+  }
+
+  // Haal data op van Directus
+  const response = await fetch('https://fdnd.directus.app/items/person/?' + new URLSearchParams(params));
+  const data = await response.json();
+
+  // Render je Liquid view en geef de gefilterde data mee
+  res.render('index.liquid', { persons: data.data });
+});
 
 
 // Stel het poortnummer in waar express op moet gaan luisteren
@@ -110,3 +144,4 @@ app.listen(app.get('port'), function () {
   // Toon een bericht in de console en geef het poortnummer door
   console.log(`Application started on http://localhost:${app.get('port')}`)
 })
+
