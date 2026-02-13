@@ -104,34 +104,38 @@ app.get('/student/:id', async function (request, response) {
 
 app.get('/aflopend-alfabetische-volgorde', async function (request, response) {
 
-  // Haal alle personen uit de WHOIS API op, van dit jaar, gesorteerd op naam
+  // ✅ NIEUW: haal het gekozen dier op uit de URL
+  const animal = request.query.animal
+
+  // Haal alle personen op
   const params = {
-    // Sorteer op naam
+    // Sorteer op naam Z-A
     'sort': '-name',
 
-    // Geef aan welke data je per persoon wil terugkrijgen
+    // Velden
     'fields': '*,squads.*',
 
-    // Combineer meerdere filters
+    // Filters voor tribe en cohort
     'filter[squads][squad_id][tribe][name]': 'FDND Jaar 1',
-    // Filter eventueel alleen op een bepaalde squad
-    // 'filter[squads][squad_id][name]': '1I',
-    // 'filter[squads][squad_id][name]': '1J',
     'filter[squads][squad_id][cohort]': '2526'
   }
-  const personResponse = await fetch('https://fdnd.directus.app/items/person/?' + new URLSearchParams(params))
 
-  // En haal daarvan de JSON op
+  // ✅ NIEUW: voeg filter toe als animal bestaat
+  if (animal) {
+    params['filter[fav_animal][_eq]'] = animal
+  }
+
+  const personResponse = await fetch(
+    'https://fdnd.directus.app/items/person/?' + new URLSearchParams(params)
+  )
+
   const personResponseJSON = await personResponse.json()
 
-  // personResponseJSON bevat gegevens van alle personen uit alle squads van dit jaar
-  // Toon eventueel alle data in de console
-  // console.log(personResponseJSON)
-
-  // Render index.liquid uit de views map en geef de opgehaalde data mee als variabele, genaamd persons
-  // Geef ook de eerder opgehaalde squad data mee aan de view
-  response.render('index.liquid', {persons: personResponseJSON.data, squads: squadResponseJSON.data})
+  response.render('index.liquid', {
+    persons: personResponseJSON.data
+  })
 })
+
   
 app.get('/oplopend-alfabetische-volgorde', async function (request, response) {
 
