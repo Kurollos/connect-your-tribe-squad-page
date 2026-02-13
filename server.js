@@ -100,41 +100,39 @@ app.get('/student/:id', async function (request, response) {
   // Geef ook de eerder opgehaalde squad data mee aan de view
   response.render('student.liquid', {person: personDetailResponseJSON.data, squads: squadResponseJSON.data})
 })
-app.get('/', async (req, res) => {
-  const sort = req.query.sort || 'name-asc'; // sorteren
-  const animal = req.query.animal || '';     // filter op dier
 
-  // Bepaal hoe je wilt sorteren
-  let sortParam;
-  switch(sort) {
-    case 'name-asc': sortParam = 'name'; break;
-    case 'name-desc': sortParam = '-name'; break;
-    case 'birthdate-asc': sortParam = 'birthdate'; break;
-    case 'birthdate-desc': sortParam = '-birthdate'; break;
-    default: sortParam = 'name';
-  }
 
-  // Bouw de params voor Directus API
+app.get('/aflopend-alfabetische-volgorde', async function (request, response) {
+
+  // Haal alle personen uit de WHOIS API op, van dit jaar, gesorteerd op naam
   const params = {
-    fields: '*,squads.*',
-    sort: sortParam,
+    // Sorteer op naam
+    'sort': '-name',
+
+    // Geef aan welke data je per persoon wil terugkrijgen
+    'fields': '*,squads.*',
+
+    // Combineer meerdere filters
     'filter[squads][squad_id][tribe][name]': 'FDND Jaar 1',
-    'filter[squads][squad_id][cohort]': '2526',
-  };
-
-  // Als een dier gekozen is, voeg filter toe
-  if (animal) {
-    params['filter[fav_animal][_eq]'] = animal; // Directus filter voor exact gelijk
+    // Filter eventueel alleen op een bepaalde squad
+    // 'filter[squads][squad_id][name]': '1I',
+    // 'filter[squads][squad_id][name]': '1J',
+    'filter[squads][squad_id][cohort]': '2526'
   }
+  const personResponse = await fetch('https://fdnd.directus.app/items/person/?' + new URLSearchParams(params))
 
-  // Haal data op van Directus
-  const response = await fetch('https://fdnd.directus.app/items/person/?' + new URLSearchParams(params));
-  const data = await response.json();
+  // En haal daarvan de JSON op
+  const personResponseJSON = await personResponse.json()
 
-  // Render je Liquid view en geef de gefilterde data mee
-  res.render('index.liquid', { persons: data.data });
-});
+  // personResponseJSON bevat gegevens van alle personen uit alle squads van dit jaar
+  // Toon eventueel alle data in de console
+  // console.log(personResponseJSON)
 
+  // Render index.liquid uit de views map en geef de opgehaalde data mee als variabele, genaamd persons
+  // Geef ook de eerder opgehaalde squad data mee aan de view
+  response.render('index.liquid', {persons: personResponseJSON.data, squads: squadResponseJSON.data})
+})
+  
 
 // Stel het poortnummer in waar express op moet gaan luisteren
 app.set('port', process.env.PORT || 8000)
