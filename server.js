@@ -133,6 +133,101 @@ app.get('/aflopend-alfabetische-volgorde', async function (request, response) {
   response.render('index.liquid', {persons: personResponseJSON.data, squads: squadResponseJSON.data})
 })
   
+app.get('/oplopend-alfabetische-volgorde', async function (request, response) {
+
+  // Haal alle personen uit de WHOIS API op, van dit jaar, gesorteerd op naam
+  const params = {
+    // Sorteer op naam A-Z
+    'sort': 'name',
+
+    // Geef aan welke data je per persoon wil terugkrijgen
+    'fields': '*,squads.*',
+
+    // Combineer meerdere filters
+    'filter[squads][squad_id][tribe][name]': 'FDND Jaar 1',
+
+    // Filter cohort
+    'filter[squads][squad_id][cohort]': '2526'
+  }
+
+  const personResponse = await fetch(
+    'https://fdnd.directus.app/items/person/?' + new URLSearchParams(params)
+  )
+
+  // JSON ophalen
+  const personResponseJSON = await personResponse.json()
+
+  // Render pagina
+  response.render('index.liquid', {
+    persons: personResponseJSON.data,
+    squads: squadResponseJSON.data
+  })
+
+})
+
+app.get('/geboortedatum-volgorde', async function (request, response) {
+
+  // Haal alle personen uit de WHOIS API op, van dit jaar, gesorteerd op naam
+  const params = {
+    // Sorteer op naam A-Z
+    'sort': '-birthdate',
+
+    // Geef aan welke data je per persoon wil terugkrijgen
+    'fields': '*,squads.*',
+
+    // Combineer meerdere filters
+    'filter[squads][squad_id][tribe][name]': 'FDND Jaar 1',
+
+    // Filter cohort
+    'filter[squads][squad_id][cohort]': '2526'
+  }
+
+  const personResponse = await fetch(
+    'https://fdnd.directus.app/items/person/?' + new URLSearchParams(params)
+  )
+
+  // JSON ophalen
+  const personResponseJSON = await personResponse.json()
+
+  // Render pagina
+  response.render('index.liquid', {
+    persons: personResponseJSON.data,
+    squads: squadResponseJSON.data
+  })
+
+})
+
+app.get('/aflopend-geboortedatum-volgorde', async function (request, response) {
+
+  // Haal alle personen uit de WHOIS API op, van dit jaar, gesorteerd op naam
+  const params = {
+    // Sorteer op naam A-Z
+    'sort': 'name',
+
+    // Geef aan welke data je per persoon wil terugkrijgen
+    'fields': '*,squads.*',
+
+    // Combineer meerdere filters
+    'filter[squads][squad_id][tribe][name]': 'FDND Jaar 1',
+
+    // Filter cohort
+    'filter[squads][squad_id][cohort]': '2526'
+  }
+
+  const personResponse = await fetch(
+    'https://fdnd.directus.app/items/person/?' + new URLSearchParams(params)
+  )
+
+  // JSON ophalen
+  const personResponseJSON = await personResponse.json()
+
+  // Render pagina
+  response.render('index.liquid', {
+    persons: personResponseJSON.data,
+    squads: squadResponseJSON.data
+  })
+
+})
 
 // Stel het poortnummer in waar express op moet gaan luisteren
 app.set('port', process.env.PORT || 8000)
