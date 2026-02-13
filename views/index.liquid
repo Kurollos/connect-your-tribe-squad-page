@@ -5,27 +5,58 @@
   <h1>Redesign Squadpage Sparkles</h1>
 </header>
 
+{% comment %} <section class="filters">
+  <form action="/" method="get">
+    
+    <label for="sort">Sorteer op:</label>
+    <select name="sort" id="sort">
+      <option value="name-asc">Naam A-Z</option>
+      <option value="name-desc"><a href="/aflopend-alfabetische-volgorde">Knop Z-A</a></option>
+      <option value="birthdate-asc">Leeftijd jong-oud</option>
+      <option value="birthdate-desc">Leeftijd oud-jong</option>
+    </select>
+
+    <label for="animal">Filter op dier:</label>
+    <select name="animal" id="animal">
+      <option value="">Alle dieren</option>
+      <option value="cat">Kat</option>
+      <option value="dog">Hond</option>
+      <option value="bird">Vogel</option>
+    </select>
+
+    <button type="submit">Toepassen</button>
+
+  </form>
+</section> {% endcomment %}
+<details>
+  <summary>Filter</summary>
+  <a href="/aflopend-alfabetische-volgorde">Sorteer Z-A</a>
+</details>
+
+<main>
 <section id="cardsGrid">
   {% for person in persons %}
     <section class="card">
+
       <section class="image-container">
         {% if person.mugshot %}
           <img src="https://fdnd.directus.app/assets/{{ person.mugshot }}?width=500" alt="{{ person.name }}">
         {% else %}
           <img src="/image-removebg-preview.png" alt="Geen foto beschikbaar">
         {% endif %}
-
-        <!-- Overlay met het favoriet dier -->
         <section class="animal-overlay">{{ person.fav_animal }}</section>
       </section>
 
       <h2>{{ person.name }}</h2>
       <p>Geboortedatum: {{ person.birthdate }}</p>
       <p>Bio: {{ person.bio | strip_html }}</p>
-      <p>Fav Attribute: {{ person.fav_attribute }}</p>
+      <p>Fav Animal: {{ person.fav_animal }}</p>
+    
+
     </section>
   {% endfor %}
-</section>
+</main>
+
 
 
 {% render 'partials/foot.liquid', squads: squads %}
